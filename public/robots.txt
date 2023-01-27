@@ -1,2 +1,5 @@
 User-agent: *
-Allow: *
+Noindex: my.stablepoint.com
+Noindex: clients.stablepoint.com
+Disallow: clients.stablepoint.com
+Sitemap: https://stablepoint.com/sitemap.xml
