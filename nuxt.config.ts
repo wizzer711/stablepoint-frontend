@@ -21,7 +21,8 @@ export default defineNuxtConfig({
     public: {
       STRAPI_PREVIEW_SECRET: process.env.STRAPI_PREVIEW_SECRET,
       STRAPI_URL_GLOBAL: process.env.STRAPI_URL_GLOBAL,
-      GTM_ID: process.env.GTM_ID
+      GTM_ID: process.env.GTM_ID,
+      BRAND: process.env.BRAND
     }
   },
   build: {

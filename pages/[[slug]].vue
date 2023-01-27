@@ -72,21 +72,20 @@
     })
   }
 
+  // Get global brand details and put into store
+  let { data: globals } = await useFetch(`${config.public.STRAPI_URL_GLOBAL}/api/brand-details?populate=deep&filters[brand]=${config.public.BRAND}`)
+  globals = isNull(globals.value) ? {} : useGet(globals.value.data[0], 'details', {})
+  useState('brandDetails', () => globals)
+
   // Set MetaDetails
   const metaDetails = useGet(data, 'seo', null)
   const metaTitle = useGet(metaDetails, 'metaTitle', 'Upmind')
   const metaDescription = useGet(metaDetails, 'metaDescription', '')
 
-  // Get global brand details and put into store
-  let { data: globals } = await useFetch(`${config.public.STRAPI_URL_GLOBAL}/api/brand-details?populate=deep&filters[brand]=stablepoint`)
-  globals = isNull(globals.value) ? {} : useGet(globals.value.data[0], 'attributes', {})
-  useState('brandDetails', () => globals)
-
   // Get hreflang language data
   const hreflangFilter = useGet(data, 'hreflangOverride', slug)
   let { data: hreflangsData } = await useFetch(`${config.public.STRAPI_URL_GLOBAL}/api/hreflang-mappings?populate=*&filters[slug]=${hreflangFilter}`)
-  hreflangsData = isNull(hreflangsData.value) ? {} : useGet(hreflangsData.value.data[0], 'attributes', {})
-  hreflangsData = useGet(hreflangsData, 'hreflangs', null)
+  hreflangsData = isNull(hreflangsData.value) ? {} : useGet(hreflangsData.value.data[0], 'hreflangs', {})
 
   let hreflangTags: Array<Hreflang> = []
   useForEach(hreflangsData, (hreflang: any) => {
