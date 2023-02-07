@@ -5,12 +5,12 @@ export default defineNuxtPlugin(() => {
     const md = new Markdown({ html: true })
     return {
       provide: {
-        parseMarkdown: (data: string) => {
+        parseMarkdownInline: (data: string) => {
           if(isUndefined(data)){
             return data
           }
           const sanitizedData = xss(data);
-          return md.render(sanitizedData)
+          return md.renderInline(sanitizedData)
         }
       }
     }

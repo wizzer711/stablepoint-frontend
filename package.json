@@ -18,10 +18,12 @@
     "@tailwindcss/typography": "^0.5.9",
     "markdown-it": "^13.0.1",
     "nuxt": "^3.1.0",
+    "nuxt-delay-hydration": "^1.1.1",
     "nuxt-lodash": "^2.4.1",
     "postcss-custom-properties": "^13.1.0",
     "sass": "^1.56.1",
-    "sass-loader": "^13.2.0"
+    "sass-loader": "^13.2.0",
+    "xss": "^1.0.14"
   },
   "dependencies": {}
 }

@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     'nuxt-lodash',
     '@nuxtjs/i18n',
     '@nuxtjs/color-mode',
-    '@nuxt/image-edge'
+    '@nuxt/image-edge',
+    'nuxt-delay-hydration'
   ],
   strapi: {
     url: process.env.STRAPI_URL,
@@ -17,12 +18,17 @@ export default defineNuxtConfig({
     cookie: {},
     cookieName: 'strapi_jwt'
   },
+  delayHydration: { 
+    mode: 'init',
+    debug: process.env.NODE_ENV === 'development'
+  },
   publicRuntimeConfig: {
     public: {
       STRAPI_PREVIEW_SECRET: process.env.STRAPI_PREVIEW_SECRET,
       STRAPI_URL_GLOBAL: process.env.STRAPI_URL_GLOBAL,
       GTM_ID: process.env.GTM_ID,
-      BRAND: process.env.BRAND
+      BRAND: process.env.BRAND,
+      BRAND_DOMAIN: process.env.BRAND_DOMAIN
     }
   },
   build: {

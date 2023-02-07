@@ -22,7 +22,8 @@
   import { Hreflang } from '~/types/hreflangs'
   import { PrimaryNavigation, FooterNavigation } from '~/types/global/globalNavigation'
 
-  const config = useRuntimeConfig();
+  const config = useRuntimeConfig()
+  const { $sanitize } = useNuxtApp()
 
   // Get page data
   const route = useRoute()
@@ -37,11 +38,11 @@
       'filters[slug]': 'terms-of-service',
     }
   )
-  const page = useGet(data.data[0], 'attributes', null)
-  data = useGet(data.data[0], 'attributes', null)
+  const metaDetails = useGet(data.data[0], 'seo', null)
+  data = useGet(data.data[0], 'ribbons', null)
 
   let { data: legalData } = await useFetch(`${config.public.STRAPI_URL_GLOBAL}/api/legals?populate=*&filters[slug]=terms-of-services`)
-  legalData = isNull(legalData.value) ? {} : useGet(legalData.value.data[0], 'attributes', {})
+  legalData = isNull(legalData.value) ? {} : legalData.value.data[0]
 
   // Get primary navigation data
   let primaryNavigationData = await find<Strapi4Response<PrimaryNavigation>>(
@@ -64,11 +65,10 @@
   footerNavigationData = useGet(footerNavigationData.data, 'navItem' , null)
 
   // Throw 404 if page not found
-  const noPage = isEmpty(page)
   const noData = isEmpty(legalData)
   const noPrimaryNavigation = isEmpty(primaryNavigationData)
   const noFooterNavigation = isEmpty(footerNavigationData)
-  if(noData && noPage && noPrimaryNavigation && noFooterNavigation){
+  if(noData || noPrimaryNavigation || noFooterNavigation){
     throw createError({
       statusCode: 404,
       statusMessage: 'Page Not Found',
@@ -81,9 +81,9 @@
   useState('brandDetails', () => globals)
 
   // Set MetaDetails
-  const metaDetails = useGet(data, 'seo', null)
-  const metaTitle = useGet(metaDetails, 'metaTitle', 'Upmind')
+  const metaTitle = useGet(metaDetails, 'metaTitle', config.public.BRAND)
   const metaDescription = useGet(metaDetails, 'metaDescription', '')
+  const metaRobots = useGet(metaDetails, 'metaRobots', 'index, follow')
 
   // Get hreflang language data
   const hreflangFilter = useGet(data, 'hreflangOverride', slug)
@@ -102,11 +102,11 @@
   const linkTags = [
     {
       rel: 'home',
-      href: 'upmind.com'
+      href: config.public.BRAND_DOMAIN
     },
     {
       rel: 'canonical',
-      href: `upmind.com${route.fullPath}`
+      href: `${config.public.BRAND_DOMAIN}${route.fullPath}`
     },
     {
       rel: 'icon',
@@ -128,21 +128,21 @@
     },
     {
       rel: 'alternate',
-      href: `upmind.com${route.fullPath}`,
+      href: `${config.public.BRAND_DOMAIN}${route.fullPath}`,
       hreflang: 'x-default'
     }
   ]
 
   useServerSeoMeta({
-    title: metaTitle,
-    description: metaDescription,
-    robots: 'index, follow',
+    title: $sanitize(metaTitle),
+    description: $sanitize(metaDescription),
+    robots: $sanitize(metaRobots),
     viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1',
-    ogTitle: metaTitle,
-    ogDescription: metaDescription,
-    ogSiteName: 'Upmind',
+    ogTitle: $sanitize(metaTitle),
+    ogDescription: $sanitize(metaDescription),
+    ogSiteName: config.public.BRAND,
     ogType: 'website',
-    ogUrl: 'upmind.com',
+    ogUrl: `${config.public.BRAND_DOMAIN}${route.fullPath}`,
     ogImage: '',
     ogImageWidth: 400,
     ogImageHeight: 400,
